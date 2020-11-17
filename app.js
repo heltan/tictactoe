@@ -7,13 +7,14 @@ document.getElementById('newgame').onclick = () => {
   for (let i = 0; i < cells.length; i ++) {
     cells[i].innerHTML = 'click here';
   }
+  gamePlay();
 };
 
 
 
 //set up an onclick for the table Cell
-
-let table = document.getElementById("table");
+let gamePlay = () => {
+  let table = document.getElementById("table");
 let cells = table.getElementsByTagName("td");
 //first we check if anything is saved in local storage for who the current player is
 let getCurrentPlayer = localStorage.getItem('CurrentPlayerX');
@@ -45,5 +46,10 @@ for (let i = 0; i < cells.length; i ++) {
     }
 
   }
+}
+
+
 };
+gamePlay();
+
 
