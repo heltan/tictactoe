@@ -55,14 +55,15 @@ let gamePlay = () => {
         localStorage.setItem('CurrentPlayerX', 'true');
       }
       let emptyCheck = checkSpaces();
-      console.log('gamearray',gameArray);
-      console.log('is the board full?', emptyCheck);
+
       let splitArray = splitThree(gameArray);
 
       //now we run the checks to see if the game is over
-      checkHorizontal();
+      checkHorizontal(splitArray);
+      console.log('winner', winner);
       if (winner) {
         //then there is a winner
+        document.getElementById('status').innerHTML = `Winner is ${winner}!`;
 
       }
       //console.log('horizontal winner?', winner);
