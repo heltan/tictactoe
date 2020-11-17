@@ -1,7 +1,11 @@
 //setup an onclick for the button, to clear all local storage and start new game
+let gameArray;
+let winner;
 document.getElementById('newgame').onclick = () => {
-  console.log('clicked');
+  document.getElementById('status').innerHTML = 'Gameplay in progress, no winners yet!';
   localStorage.clear();
+  gameArray =[1,1,1,1,1,1,1,1,1];
+  winner = undefined;
   //now we also want to clear the board
   let cells = table.getElementsByTagName("td");
   for (let i = 0; i < cells.length; i ++) {
@@ -31,24 +35,26 @@ let gamePlay = () => {
 
   //now we set onclick for every cell in the table
   //and we will push all the inputs into a gamearray, array.
-  let gameArray =[1,1,1,1,1,1,1,1,1];
+  gameArray =[1,1,1,1,1,1,1,1,1];
   for (let i = 0; i < cells.length; i ++) {
     //console.log(cells, 'cells');
 
     cells[i].onclick = () => {
       //we check who the current player is from local storage
       getCurrentPlayer = localStorage.getItem('CurrentPlayerX');
+      let gameOver = localStorage.getItem('GameOver');
       //now check if there are empty spaces or not
 
 
       //now we test if current player is X, and the cell they click on is available to click
-      if (getCurrentPlayer === 'true' && cells[i].innerHTML === 'click here') {
+      if (gameOver!== 'true' && getCurrentPlayer === 'true' && cells[i].innerHTML === 'click here') {
 
         cells[i].innerHTML = 'X';
         gameArray[i] = 'X';
         localStorage.setItem('CurrentPlayerX', 'false');
 
-      } else if (getCurrentPlayer === 'false' && cells[i].innerHTML === 'click here') {
+
+      } else if (gameOver !== 'true' && getCurrentPlayer === 'false' && cells[i].innerHTML === 'click here') {
 
         cells[i].innerHTML = 'O';
         gameArray[i] = 'O';
@@ -60,13 +66,49 @@ let gamePlay = () => {
 
       //now we run the checks to see if the game is over
       checkHorizontal(splitArray);
-      console.log('winner', winner);
+
       if (winner) {
         //then there is a winner
         document.getElementById('status').innerHTML = `Winner is ${winner}!`;
+        //now we will stop the gameplay
+        localStorage.setItem('GameOver', 'true');
 
       }
-      //console.log('horizontal winner?', winner);
+      //now we check vertical check for game over if there is no horizontal winner
+      if (!winner) {
+        checkVertical(splitArray);
+        if (winner) {
+          document.getElementById('status').innerHTML = `Winner is ${winner}!`;
+          localStorage.setItem('GameOver', 'true');
+          winner = undefined;
+          gameArray =[1,1,1,1,1,1,1,1,1];
+          localStorage.clear();
+        }
+      }
+      //now  diagonal check for game over if no horizontal or vertical
+      if (!winner) {
+        checkDiagonal(splitArray);
+        if (winner) {
+          document.getElementById('status').innerHTML = `Winner is ${winner}!`;
+          localStorage.setItem('GameOver', 'true');
+          winner = undefined;
+          gameArray =[1,1,1,1,1,1,1,1,1];
+          localStorage.clear();
+
+        } else {
+          //now we check if it's a tie by determining if all spaces have been used
+          let check = checkSpaces();
+          if (check) {
+            document.getElementById('status').innerHTML = `It's a tie!`;
+            localStorage.setItem('GameOver', 'true');
+            winner = undefined;
+            gameArray =[1,1,1,1,1,1,1,1,1];
+            localStorage.clear();
+
+
+          }
+        }
+      }
 
 
 
@@ -83,7 +125,7 @@ let splitThree = (array) => {
   let mainArray = [];
   let arr1 = array.slice(0,3);
   let arr2 = array.slice(3,6);
-  let arr3 = array.slice(6,8);
+  let arr3 = array.slice(6,9);
   mainArray.push(arr1, arr2, arr3);
   return mainArray;
 
@@ -92,7 +134,7 @@ let splitThree = (array) => {
 //here are functions that check if there is a winner
 //they will return the 'winner' variable if there is a winner. it will equal X or O
 
-let winner;
+
 let winnerArray;
 let checkHorizontal = (array) => {
   //we will check each array inside, vertically. for every row
@@ -133,11 +175,14 @@ let checkVertical = (array) => {
 //now a function to check diagonally
 let checkDiagonal = function (array) {
     //diagonally only needs to check index 0 and index last of the first row in this array
+    console.log('array',array);
     let first = array[0][0];
-    let last = array[0][array.length-1];
+    let last = array[0][2];
     let mid = array[1][1];
+
     let firstLastRow = array[2][0];
-    let lastLastRow = array[2][array.length-1];
+    let lastLastRow = array[2][2];
+    console.log('first', first, 'last', last, 'mid', mid, 'firstlastrow', firstLastRow, 'lastlastrow', lastLastRow);
     if (first !== 1 && first === mid && first === lastLastRow) {
         winner = first;
 
