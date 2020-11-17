@@ -1,3 +1,4 @@
 # tictactoe
 A single page tic tac toe game
-the readme
+
+Open the html file in your favorite browser and play!
