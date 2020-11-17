@@ -1,3 +1,16 @@
+//setup an onclick for the button, to clear all local storage and start new game
+document.getElementById('newgame').onclick = () => {
+  console.log('clicked');
+  localStorage.clear();
+  //now we also want to clear the board
+  let cells = table.getElementsByTagName("td");
+  for (let i = 0; i < cells.length; i ++) {
+    cells[i].innerHTML = 'click here';
+  }
+};
+
+
+
 //set up an onclick for the table Cell
 
 let table = document.getElementById("table");
